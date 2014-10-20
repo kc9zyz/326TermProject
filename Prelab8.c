@@ -33,40 +33,15 @@
 #define S4 4
 
 
-//Time Struct
-typedef struct {
-	uint16_t year; //Year
-	uint8_t month; //Month
-	uint8_t date; //Date
-	uint8_t hour; //Hour
-	uint8_t minute; //Minute
-	uint8_t second; //Second
-} time_t;
-
-//I2C State enum
-typedef enum {
-	WRITE, //Write state
-	READ, //Read state
-}I2C_state;
-
-void SPI_MasterInit(void);
 void soundAlarm(void);
 void setAlarm(void);
 void writeTheTime(void);
 void writeAlarmToggle(void);
 void writeAlarmSet(void);
 void timer0Init();
-void initI2c(void);
 void delayMS(uint16_t msec);
 void delay_ms_alarm(uint16_t msec);
-time_t getTime(void);
-uint8_t sendI2C(uint8_t reg, uint8_t tx, I2C_state st);
-uint8_t I2C_Start();
-uint8_t I2C_SendAddr(uint8_t addr);
-uint8_t I2C_ReadNACK();
-uint8_t I2C_Write(uint8_t data);
-int bcdEncode(uint8_t decimal);
-uint8_t bcdDecode(uint8_t bcd);
+
 void pwm_PB2(unsigned Ton, unsigned period);
 uint8_t DebounceSwitch1();
 uint8_t DebounceSwitch1Short();
@@ -292,14 +267,7 @@ int main(void)
 	}
 }
 
-// initialize the SPI connection
-void SPI_MasterInit(void)
-{
-	/* Sets PORTB as output */
-	DDRB = ALL_OUTPUT;
-	/* Enable SPI, Master, set clock rate fck/16 */
-	SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
-}
+
 
 //sounds the alarm duty cycle
 void soundAlarm()
@@ -402,114 +370,6 @@ void writeAlarmSet(void)
 	LCD_gotoXY(13,0); //position the cursor for set alarm header
 	LCD_writeString_F("Set Alarm");
 	LCD_writeString_megaFont(alarm); //print the Hours and Minutes of alarm in large font
-}
-
-//Initialize i2c bus
-void initI2c(void)
-{
-
-	TWSR = 0; //Zero prescaler
-	TWBR = ((F_CPU/F_SCL) - 16/2); //Set SCL frequency
-}
-
-//Send I2C Data
-uint8_t sendI2C(uint8_t reg, uint8_t tx, I2C_state st)
-{
-	
-	if( st == WRITE) //Write Data
-	{
-		I2C_Start();
-		I2C_SendAddr(DS1307);
-		I2C_Write(reg);
-		I2C_Write(tx);
-		TWCR = TW_STOP;
-		//I2C_Stop();
-		return 1;
-	}
-	//Read Data
-	else if(st==READ)
-	{
-		uint8_t data = 0;
-		I2C_Start();
-		I2C_SendAddr(DS1307);
-		I2C_Write(reg);
-		I2C_Start();
-		I2C_SendAddr(DS1307|TW_READ);
-		data = I2C_ReadNACK();
-		TWCR = TW_STOP;
-		//I2C_Stop();
-		return data;
-	}
-	
-	return 0;
-}
-//Send start
-uint8_t I2C_Start()
-{
-	//Send Start
-	TWCR = TW_START;
-	while(!TW_READY); //wait
-	return(TW_STATUS==0x18); //Check if OK
-}
-
-//Send address
-uint8_t I2C_SendAddr(uint8_t addr)
-{
-	//Send Slave address
-	TWDR = addr; //load address into TW register
-	TWCR = TW_SEND; //Start Sending
-	while(!TW_READY); //wait
-	return(TW_STATUS==0x18); //Check if OK
-}
-
-//Write Data
-uint8_t I2C_Write(uint8_t data)
-{
-	TWDR = data;
-	TWCR = TW_SEND;
-	while(!TW_READY);
-	return(TW_STATUS!=0x28); //Check if OK
-}
-
-//Read data
-uint8_t I2C_ReadNACK (void)
-{
-	TWCR = TW_NACK;
-	while(!TW_READY);
-	return TWDR;
-}
-
-
-//Read RTC Clock
-time_t getTime(void)
-{
-	time_t time;
-
-	time.hour = bcdDecode(sendI2C(HOURS_REGISTER,0,READ) & 0x3f);
-
-	time.minute = bcdDecode(sendI2C(MINUTES_REGISTER,0,READ));
-	
-	time.second = bcdDecode(sendI2C(SECONDS_REGISTER,0,READ));
-
-	time.date = bcdDecode(sendI2C(DAYS_REGISTER,0,READ));
-
-	time.month = bcdDecode(sendI2C(MONTHS_REGISTER,0,READ));
-
-	time.year = bcdDecode(sendI2C(YEARS_REGISTER,0,READ));
-	return time;
-}
-
-//Decodes Binary Coded Decimal
-uint8_t bcdDecode(uint8_t bcd)
-{
-	return (bcd & 0x0F) + 10*((bcd & 0x70)>>4);
-}
-
-//Encodes Binary Coded Decimal
-int bcdEncode(uint8_t decimal)
-{
-	return ((decimal / 10)<<4) | (decimal % 10);
-	
 }
 
 void pwm_PB2(unsigned Ton, unsigned period)
