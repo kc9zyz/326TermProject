@@ -17,7 +17,7 @@
 #include <string.h>
 
 #include "graphics.h"
-#include "DS1307.h"
+#include "state.h"
 
 #define F_CPU 16000000UL
 #define F_SCL 100000UL
@@ -25,12 +25,7 @@
 #define MYUBRR F_CPU/16/BAUD-1
 #define ALL_OUTPUT	0xFF // 1111 1111
 
-// define the different cases of state machine
-#define S0 0
-#define S1 1
-#define S2 2
-#define S3 3
-#define S4 4
+
 
 
 void soundAlarm(void);

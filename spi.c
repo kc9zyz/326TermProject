@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include "spi.h"
 
-
+#define SPI_OUTPUT _BV(PB2)|
 // initialize the SPI connection
 void SPI_MasterInit(void)
 {

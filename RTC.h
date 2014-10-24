@@ -36,7 +36,7 @@ time_t getTime(void);
 *	\param decimal The decimal form of a number
 *	\return BCD form of decimal number
 */
-int bcdEncode(uint8_t decimal);
+uint8_t bcdEncode(uint8_t decimal);
 
 /*!
 *	\brief Decodes binary coded decimal

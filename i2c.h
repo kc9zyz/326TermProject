@@ -13,7 +13,7 @@
 typedef enum {
 	I2C_WRITE, //!<	Write state
 	I2C_READ, //!<	Read state
-}I2C_state_t;
+} I2C_state_t;
 
 //Function Prototypes
 
