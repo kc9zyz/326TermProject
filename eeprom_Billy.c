@@ -28,4 +28,4 @@ time_t getStoredAlarmTime(void)
 	time.minute = bcdDecode(eeprom_read_byte(EEPROM_MINUTES));
 		
 	return time;
-{
+}
