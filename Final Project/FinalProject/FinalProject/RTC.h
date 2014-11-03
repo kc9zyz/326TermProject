@@ -23,11 +23,19 @@ typedef struct {
 /*!
 *	\brief Read RTC Clock
 *	
-*	Reads the time from from the RTC
+*	Reads the time from the RTC
 *	\return the current time
 */
 time_t getTime(void);
 
+/*!
+*	\brief Set RTC Clock
+*	
+*	Sets the time on the RTC
+* \param time The current time to send to the RTC
+*	\return the current time
+*/
+time_t setTime(time_t time);
 
 /*!
 *	\brief Encodes to binary coded decimal
