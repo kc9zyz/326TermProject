@@ -1,0 +1,1 @@
+void SPI_MasterInit(void);
