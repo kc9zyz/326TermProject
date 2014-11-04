@@ -1,13 +1,10 @@
 /*
-* Lab8
+* Term Project
 *
-* Created: 10/8/2014 4:05:59 PM
+* Created: 11/3/2014 
 *  Author: Greg Lepley and Billy Neuson
 *
-* Program is designed to activate a MOSFET that powers a solenoid
-* for a maximum of 15 seconds when the button is pressed. If the button is pressed
-* during the period of time that the solenoid is active, the process is ended and
-* the solenoid is turned off.
+* Term project main C file
 */
 
 
@@ -53,10 +50,7 @@ uint8_t queryButton();
 void displayMenu();
 void WDT_Init(void);
 
-//things to be done
-//-stub for GPS
-//-stub for radio
-//-stub for temperature
+
 //watchdog basics are included, but not implemented
 
 
@@ -156,7 +150,7 @@ int main(void)
 				}
 				
 				break;
-				
+			//Display the menu	
 			case S1:
 			
 				i++;
@@ -216,7 +210,7 @@ int main(void)
 			//displays radio interface and allows user to manipulate
 			//the radio controls	
 			case S2:
-				state = S0;
+				//TODO: Radio display
 				
 				break;
 				
@@ -242,23 +236,23 @@ int main(void)
 				//increments the seconds by 1
 				else
 				{
-					timeAlarm.minute++;
+					timeAlarm1.minute++;
 				}
 				
 				//rolls over hours if 24 hours is reached
-				if(timeAlarm.hour == 23)
+				if(timeAlarm1.hour == 23)
 				{
-					timeAlarm.hour = 0;
+					timeAlarm1.hour = 0;
 				}
 				//increments the seconds by 1
 				else
 				{
-					timeAlarm.hour++;
+					timeAlarm1.hour++;
 				}
 				
 				delayMS(5);
 				
-				//check 5 times to see if both buttons are being pressed
+				//check 5 times to see if menu button is pressed
 				//causes program to return to S0 if true
 				menulong = DebounceSwitch1();
 				presslong = DebounceSwitch2();
@@ -290,17 +284,141 @@ int main(void)
 			//minute values of the alarm
 			case S4:
 			
+				//display the interface for setting the alarm time
+				i++;
+				if(i == 10)
+				{
+					if(toggle == 1){toggle = 0;}
+					else{toggle = 1;}
+					writeAlarmSet();
+					i = 0;
+				}
+				
+				// rolls over minutes if 60 minutes is reached
+				if(timeAlarm2.minute == 59)
+				{
+					timeAlarm2.minute = 0;
+				}
+				//increments the seconds by 1
+				else
+				{
+					timeAlarm2.minute++;
+				}
+				
+				//rolls over hours if 24 hours is reached
+				if(timeAlarm2.hour == 23)
+				{
+					timeAlarm2.hour = 0;
+				}
+				//increments the seconds by 1
+				else
+				{
+					timeAlarm2.hour++;
+				}
+				
+				delayMS(5);
+				
+				//check 5 times to see if menu button is pressed
+				//causes program to return to S0 if true
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+					
+				menu = DebounceSwitch1Short();
+				press = DebounceSwitch2Short();
+				
+				//if user presses only button 2, advance to S3 to increment minutes
+				if(press == 1 && menu == 0 && menulong == 0) {state = S3;}
+					
+				//if user presses only button 1, advance to S4 to increment hours
+				if(menu == 1 && press == 0 && presslong == 0) {state = S4;}
+		
 				break;
 				
 			//Displays the current time and allows the user to set the hour and minute
 			//minute values of the current time stored in the RTC
 			case S4:
-
+				//display the interface for setting the alarm time
+				i++;
+				if(i == 10)
+				{
+					if(toggle == 1){toggle = 0;}
+					else{toggle = 1;}
+					writeTimeSet();
+					i = 0;
+				}
+				
+				// rolls over minutes if 60 minutes is reached
+				if(timeGet.minute == 59)
+				{
+					timeGet.minute = 0;
+				}
+				//increments the seconds by 1
+				else
+				{
+					timeGet.minute++;
+				}
+				
+				//rolls over hours if 24 hours is reached
+				if(timeGet.hour == 23)
+				{
+					timeGet.hour = 0;
+				}
+				//increments the seconds by 1
+				else
+				{
+					timeGet.hour++;
+				}
+				
+				delayMS(5);
+				
+				//check 5 times to see if menu button is pressed
+				//causes program to return to S0 if true
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+				menulong = DebounceSwitch1();
+				presslong = DebounceSwitch2();
+				if(menulong == 1 && presslong == 1) {state = S0;}
+					
+				menu = DebounceSwitch1Short();
+				press = DebounceSwitch2Short();
+				
+				//if user presses only button 2, advance to S3 to increment minutes
+				if(press == 1 && menu == 0 && menulong == 0) {state = S3;}
+					
+				//if user presses only button 1, advance to S4 to increment hours
+				if(menu == 1 && press == 0 && presslong == 0) {state = S4;}
 				break;
 				
 			//flashes the current time and plays the appropriate alarm 
 			case S5:
-				
+				//TODO: alarm sound stub
+				break;
+			//Allows modification of presets
+			case S6:
+				//TODO: preset code
 				break;
 				
 			
@@ -423,6 +541,18 @@ void writeAlarmSet(void)
 		LCD_writeString_F("Set Alarm2");
 		LCD_writeString_megaFont(alarm); //print the Hours and Minutes of alarm in large font
 	}
+	
+	
+}
+//Generates the GUI for setting the system time
+void writeTimeSet(void)
+{
+	LCD_clear();
+	char time[15];
+	sprintf(time, "%02d:%02d", timeGet.hour, timeGet.minute);
+	LCD_gotoXY(13,0); //position the cursor for set time header
+	LCD_writeString_F("Set Time");
+	LCD_writeString_megaFont(time); //print the Hours and Minutes in large font
 	
 	
 }
@@ -563,6 +693,7 @@ void readAlarm2()
 	timeAlarm2.minute = temp[1];
 }
 
+//Setup the ADC peripheral
 void setupADC()
 {
 	DDRC &= ~_BV(0); //setup PC0 as input
@@ -572,6 +703,7 @@ void setupADC()
 	ADCSRB = 0;
 }
 
+//Find which buttons are pressed
 uint8_t queryButton()
 {
 	uint8_t status = 0;
@@ -616,6 +748,7 @@ uint8_t queryButton()
 	return status;
 }
 
+//Display the menu of options
 void displayMenu() 
 {
 	char One[6]			   =	" Radio";

@@ -10,7 +10,8 @@ typedef enum{
 	S2, //!<	State 2
 	S3, //!<	State 3
 	S4, //!<	State 4
-	S5, //!<    State 5
+	S5, //!<  State 5
+	S6, //!<  State 6
 } state_t;
 
 //!@}

@@ -1,4 +1,4 @@
-
+//Header file for the RTC registers
 
 //Registers
 #define SECONDS_REGISTER 0x00
