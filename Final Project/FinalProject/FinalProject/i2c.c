@@ -115,4 +115,18 @@ uint8_t I2C_ReadNACK (void)
 	return TWDR;
 }
 
+/*!
+*	\brief Reads one byte from the bus, ACKs
+*	\return data from I2C bus
+*/
+uint8_t I2C_ReadACK (void)
+{
+	TWCR = TW_ACK;
+	while(!TW_READY);
+	return TWDR;
+}
+
+
+
+
 //! @}

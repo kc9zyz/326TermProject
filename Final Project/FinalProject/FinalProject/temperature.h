@@ -3,4 +3,4 @@
 */
 
 //Returns integer representation of the temperature
-int getTemp();
+uint8_t getTemp();

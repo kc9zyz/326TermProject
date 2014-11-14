@@ -15,6 +15,7 @@
 #define TW_SEND 0x84
 #define TW_STOP 0x94
 #define TW_NACK 0x84
+#define TW_ACK 0xC4
 #define TW_READ 0x01
 #define I2C_Stop() TWCR = TW_STOP
 
@@ -63,6 +64,12 @@ uint8_t I2C_SendAddr(uint8_t addr);
 *	\return data from I2C bus
 */
 uint8_t I2C_ReadNACK();
+
+/*!
+*	\brief Reads one byte from the bus, ACKs
+*	\return data from I2C bus
+*/
+uint8_t I2C_ReadACK (void);
 
 /*!
 *	\brief Writes one byte from the bus
